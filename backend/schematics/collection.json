@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "CustomSchematics",
+  "title": "Custom NestJS Schematics",
+  "description": "Custom schematics for NestJS applications",
+  "schematics": {
+    "controller": {
+      "description": "Generate a custom controller with comprehensive CRUD operations",
+      "factory": "./controller",
+      "schema": "./controller/schema.json"
+    }
+  }
+}
