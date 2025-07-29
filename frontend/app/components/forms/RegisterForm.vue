@@ -11,7 +11,7 @@ const schema = z.object({
   password: z.string().min(8, 'Must at least 8 characters'),
   firstName: z.string().min(2, 'Must at least 2 characters'),
   lastName: z.string(),
-  phone: z.string().min(10, 'Must at least 10 characters'),
+
   passwordComparission: z.string(),
 });
 type TSchema = z.output<typeof schema>;
@@ -24,16 +24,7 @@ const registerForm = ref<Partial<TSchema> & TRegisterForm>({
   phone: '',
   passwordComparission: '',
 });
-const isDisabled = computed(() => {
-  return (
-    registerForm.value.firstName === '' ||
-    registerForm.value.lastName === '' ||
-    registerForm.value.email === '' ||
-    registerForm.value.password === '' ||
-    registerForm.value.passwordComparission === '' ||
-    registerForm.value.password !== registerForm.value.passwordComparission
-  );
-});
+
 const passwordToCompareWith = ref<string>('');
 const submit = (event: FormSubmitEvent<TSchema>) => {
   emits('submit', event.data);
@@ -45,26 +36,31 @@ const showPasswordCompareMessage = computed(() => {
 </script>
 
 <template>
-  <UCard variant="subtle" class="w-72 mx-4">
+  <UCard variant="subtle" class="w-80 mx-4">
     <template #header>
-      <h1>Register</h1>
+      <h1>Register to never miss an appointment</h1>
     </template>
     <div class="flex flex-col items-center justify-center gap-4">
       <UForm :schema="schema" :state="registerForm" @submit.prevent="submit">
-        <UFormField label="First Name" name="firstName" class="pb-4">
+        <UFormField label="First Name" name="firstName" class="pb-4" :required="true">
           <UInput v-model="registerForm.firstName" class="w-full" />
         </UFormField>
-        <UFormField label="Last Name" name="lastName" class="pb-4">
+        <UFormField label="Last Name" name="lastName" class="pb-4" :required="true">
           <UInput v-model="registerForm.lastName" class="w-full" />
         </UFormField>
         <UFormField label="Phone" name="phone" class="pb-4">
           <UInput v-model="registerForm.phone" class="w-full" />
         </UFormField>
-        <UFormField label="Email" name="email" class="pb-4">
+        <UFormField label="Email" name="email" class="pb-4" :required="true">
           <UInput v-model="registerForm.email" class="w-full" />
         </UFormField>
-        <PasswordInput v-model="registerForm.password" />
-        <UFormField label="Confirm Password" name="password" class="pb-4">
+        <PasswordInput v-model="registerForm.password" :required="true" />
+        <UFormField
+          label="Confirm Password"
+          name="password"
+          class="pb-1"
+          :required="true"
+        >
           <UInput v-model="passwordToCompareWith" type="password" class="w-full" />
           <p
             v-if="showPasswordCompareMessage"
@@ -73,13 +69,14 @@ const showPasswordCompareMessage = computed(() => {
             Passwords do not match
           </p>
         </UFormField>
-        <UButton :disabled="isDisabled" type="submit" class="cursor-pointer"
-          >Register</UButton
-        >
+        <p class="text-xs text-gray-500 pb-4">
+          <span class="text-red-500">*</span> Required fields
+        </p>
+        <UButton type="submit" class="cursor-pointer">Register</UButton>
       </UForm>
       <p>
         Do you have an Account?
-        <NuxtLink to="/login" class="cursor-pointer text-primary">Login</NuxtLink>
+        <NuxtLink to="/login" class="cursor-pointer text-primary pl-2">Login</NuxtLink>
       </p>
     </div>
   </UCard>
