@@ -3,17 +3,25 @@ import { z } from 'zod';
 import type { FormSubmitEvent } from '@nuxt/ui';
 import type { TRegisterForm } from '~/types/formTypes/loginRegister.types';
 import PasswordInput from '~/components/PasswordInput.vue';
+
 const emits = defineEmits({
   submit: (data: TRegisterForm) => data,
 });
-const schema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must at least 8 characters'),
-  firstName: z.string().min(2, 'Must at least 2 characters'),
-  lastName: z.string(),
 
-  passwordComparission: z.string(),
-});
+const schema = z
+  .object({
+    email: z.string().email('Invalid email'),
+    password: z.string().min(8, 'Must at least 8 characters'),
+    firstName: z.string().min(2, 'Must at least 2 characters'),
+    lastName: z.string().min(1, 'Last name is required'),
+    phone: z.string().optional(),
+    passwordComparission: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.passwordComparission, {
+    message: "Passwords don't match",
+    path: ['passwordComparission'],
+  });
+
 type TSchema = z.output<typeof schema>;
 
 const registerForm = ref<Partial<TSchema> & TRegisterForm>({
@@ -25,14 +33,9 @@ const registerForm = ref<Partial<TSchema> & TRegisterForm>({
   passwordComparission: '',
 });
 
-const passwordToCompareWith = ref<string>('');
 const submit = (event: FormSubmitEvent<TSchema>) => {
   emits('submit', event.data);
 };
-
-const showPasswordCompareMessage = computed(() => {
-  return passwordToCompareWith.value !== registerForm.value.password ? true : false;
-});
 </script>
 
 <template>
@@ -57,17 +60,15 @@ const showPasswordCompareMessage = computed(() => {
         <PasswordInput v-model="registerForm.password" :required="true" />
         <UFormField
           label="Confirm Password"
-          name="password"
+          name="passwordComparission"
           class="pb-1"
           :required="true"
         >
-          <UInput v-model="passwordToCompareWith" type="password" class="w-full" />
-          <p
-            v-if="showPasswordCompareMessage"
-            class="text-error pt-2 pb-0 font-light text-xs"
-          >
-            Passwords do not match
-          </p>
+          <UInput
+            v-model="registerForm.passwordComparission"
+            type="password"
+            class="w-full"
+          />
         </UFormField>
         <p class="text-xs text-black pb-4 font-bold">
           <span class="text-red-500">*</span> Required fields
