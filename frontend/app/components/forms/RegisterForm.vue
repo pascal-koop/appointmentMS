@@ -69,7 +69,7 @@ const showPasswordCompareMessage = computed(() => {
             Passwords do not match
           </p>
         </UFormField>
-        <p class="text-xs text-gray-500 pb-4">
+        <p class="text-xs text-black pb-4 font-bold">
           <span class="text-red-500">*</span> Required fields
         </p>
         <UButton variant="solid" type="submit" class="cursor-pointer text-black"

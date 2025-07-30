@@ -18,7 +18,7 @@ export default defineAppConfig({
       variants:{
         variant: {
           solid: {
-            root: 'bg-[#C4A1FF]'
+            root: 'bg-[#c4a6f9]'
           }
         }
       }
@@ -30,7 +30,8 @@ export default defineAppConfig({
     },
     formField:{
       slots: {
-        label: 'text-black font-bold text-sm'
+        label: 'text-black font-bold text-sm',
+        error: 'text-white font-semibold tracking-wide font-stretch-expanded text-[0.9rem]'
       }
     }
   }
