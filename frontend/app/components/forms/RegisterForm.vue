@@ -36,7 +36,7 @@ const showPasswordCompareMessage = computed(() => {
 </script>
 
 <template>
-  <UCard variant="subtle" class="w-80 mx-4">
+  <UCard variant="solid" class="w-80 mx-auto">
     <template #header>
       <h1>Register to never miss an appointment</h1>
     </template>
@@ -72,13 +72,15 @@ const showPasswordCompareMessage = computed(() => {
         <p class="text-xs text-gray-500 pb-4">
           <span class="text-red-500">*</span> Required fields
         </p>
-        <UButton type="submit" class="cursor-pointer">Register</UButton>
+        <UButton variant="solid" type="submit" class="cursor-pointer text-black"
+          >Register</UButton
+        >
       </UForm>
-      <p>
-        Do you have an Account?
-        <NuxtLink to="/login" class="cursor-pointer text-primary pl-2">Login</NuxtLink>
-      </p>
     </div>
+    <template #footer>
+      Do you have an Account?
+      <NuxtLink to="/login" class="text-amber-300 pl-2 cursor-pointer">Login</NuxtLink>
+    </template>
   </UCard>
 </template>
 

@@ -9,18 +9,18 @@ const showPassword = ref(false);
       v-model="model"
       :type="showPassword ? 'text' : 'password'"
       :ui="{ trailing: 'pe-1' }"
-      placeholder="Enter your password"
     >
       <template #trailing>
         <UButton
           color="neutral"
           variant="link"
           size="sm"
-          :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+          :icon="showPassword ? 'i-mingcute-eye-close-fill' : 'i-mingcute-eye-fill'"
           :aria-label="showPassword ? 'Hide password' : 'Show password'"
           :aria-pressed="showPassword"
           aria-controls="password"
           @click="showPassword = !showPassword"
+          class="text-black"
         />
       </template>
     </UInput>
