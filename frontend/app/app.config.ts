@@ -3,7 +3,7 @@ export default defineAppConfig({
 
     button: {
       slots: {
-        base: 'font-bold border-2 rounded-none border-black bg-amber-300 drop-shadow-[4px_5px_0px_#000000] no-hover-effect',
+        base: 'font-bold border-3 rounded-none border-black bg-amber-300 drop-shadow-[4px_6px_0px_#000000] no-hover-effect cursor-pointer',
         variant: {
           solid: 'text-black'
         }
@@ -11,7 +11,7 @@ export default defineAppConfig({
     },
     card: {
       slots:{
-        root: 'rounded-none border-2 border-black drop-shadow-[6px_6px_0px_#000000]',
+        root: 'rounded-none border-3 border-black drop-shadow-[4px_6px_0px_#000000]',
         header: 'text-black font-bold text-xl',
         footer: 'text-black font-bold text-sm text-center'
       },
@@ -25,7 +25,7 @@ export default defineAppConfig({
     },
     input:{
       slots: {
-        base: 'border-2 border-black rounded-none'
+        base: 'border-3 border-black rounded-none'
       }
     },
     formField:{
@@ -34,6 +34,8 @@ export default defineAppConfig({
         error: 'text-white font-semibold tracking-wide font-stretch-expanded text-[0.9rem]'
       }
     },
+
+
     toast: {
       slots: {
         root: 'border-2 border-black mb-4 text-black rounded-none drop-shadow-[6px_6px_0px_#000000] focus:outline-none ring-0',

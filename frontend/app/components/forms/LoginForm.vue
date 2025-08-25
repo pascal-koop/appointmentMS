@@ -26,7 +26,7 @@ const submit = (event: FormSubmitEvent<TLoginForm>) => {
         <UFormField label="Email" name="email" class="pb-4">
           <UInput v-model="form.email" type="email" class="w-full" />
         </UFormField>
-        <PasswordInput v-model="form.password" />
+        <PasswordInput v-model:password="form.password" />
         <UButton type="submit" class="cursor-pointer">Login</UButton>
       </UForm>
     </div>

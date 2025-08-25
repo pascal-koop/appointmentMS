@@ -24,6 +24,17 @@ export interface CreateUserResponse {
   };
 }
 
+export interface SignInDto {
+  email: string;
+  password: string;
+}
+
+export interface SignInResponse {
+  access_token: string;
+  id: string;
+  email: string;
+}
+
 // Custom error class for better error handling
 export class ApiError extends Error {
   constructor(
@@ -62,6 +73,19 @@ export class ApiService {
           'CONFLICT'
         );
 
+      }
+    }
+  }
+
+  static async signIn(data: SignInDto) {
+    try {
+      return await $fetch<SignInResponse>(`${API_BASE_URL}/auth`, {
+      method: 'POST',
+        body: data,
+      });
+    } catch (error: any) {
+      if (error.status === 401) {
+        throw new ApiError(error.data?.message, 401, 'UNAUTHORIZED');
       }
     }
   }

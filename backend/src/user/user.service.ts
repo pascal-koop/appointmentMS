@@ -17,13 +17,11 @@ export class UserService {
   }
 
   async create(data: CreateUserDto): Promise<Users> {
-    console.log(data);
-
     try {
       // First, check if a user with this email already exists
       const existingUser = await this.findByEmail(data.email);
       if (existingUser) {
-        throw new ConflictException('A user with this email already exists');
+        throw new ConflictException();
       }
 
       const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -43,8 +41,30 @@ export class UserService {
         throw error;
       }
 
-      // Handle other Prisma errors
       PrismaErrorHandler.handle(error);
     }
+  }
+
+  async findUser(email: string): Promise<{
+    id: string;
+    email: string;
+    phone: string;
+    first_name: string;
+    last_name: string;
+    password_hash: string;
+    created_at: Date;
+  } | null> {
+    return this.prisma.users.findUnique({
+      where: { email: email },
+      select: {
+        id: true,
+        email: true,
+        phone: true,
+        first_name: true,
+        last_name: true,
+        password_hash: true,
+        created_at: true,
+      },
+    });
   }
 }

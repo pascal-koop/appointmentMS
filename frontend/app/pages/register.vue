@@ -8,23 +8,17 @@ const { showError, showSuccess } = useToaster();
 const submit = async (data: TRegisterForm) => {
   delete (data as any).passwordComparission;
 
-  // Ensure all required fields are present
-  if (!data.phone) {
-    showError('Phone number is required.');
-    return;
-  }
-
   const registrationData = {
     email: data.email,
     password: data.password,
     firstName: data.firstName,
     lastName: data.lastName,
-    phone: data.phone,
+    phone: data.phone || '',
   };
 
   try {
-    const response = await ApiService.createUser(registrationData);
-    console.log(response);
+    await ApiService.createUser(registrationData);
+
     showSuccess('You are now registered, YAY! ');
   } catch (error) {
     console.error(error);
@@ -49,4 +43,8 @@ const submit = async (data: TRegisterForm) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.shadcn-input) {
+  color: #ffd700;
+}
+</style>
