@@ -8,5 +8,6 @@ export type TRegisterForm = {
     password: string,
     passwordComparission: string
     firstName: string,
-    lastName: string
+    lastName: string,
+    phone?: string
 }

@@ -3,65 +3,90 @@ import { z } from 'zod';
 import type { FormSubmitEvent } from '@nuxt/ui';
 import type { TRegisterForm } from '~/types/formTypes/loginRegister.types';
 import PasswordInput from '~/components/PasswordInput.vue';
+
 const emits = defineEmits({
   submit: (data: TRegisterForm) => data,
 });
-const schema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must at least 8 characters'),
-  firstName: z.string().min(2, 'Must at least 2 characters'),
-  lastName: z.string(),
-  passwordComparission: z.string(),
-});
+
+const schema = z
+  .object({
+    email: z.string().email('Invalid email'),
+    firstName: z.string().min(2, 'Must at least 2 characters'),
+    lastName: z.string().min(1, 'Last name is required'),
+    phone: z.string().optional(),
+    password: z.string().min(8, 'Must at least 8 characters'),
+    passwordComparission: z.string().min(8, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.passwordComparission, {
+    message: "Passwords don't match",
+    path: ['passwordComparission'],
+  });
+
 type TSchema = z.output<typeof schema>;
 
 const registerForm = ref<Partial<TSchema> & TRegisterForm>({
   email: '',
-  password: '',
   firstName: '',
   lastName: '',
+  phone: '',
+  password: '',
   passwordComparission: '',
 });
-const passwordToCompareWith = ref<string>('');
+
 const submit = (event: FormSubmitEvent<TSchema>) => {
   emits('submit', event.data);
 };
-
-const showPasswordCompareMessage = computed(() => {
-  return passwordToCompareWith.value !== registerForm.value.password ? true : false;
-});
 </script>
 
 <template>
-  <UCard variant="subtle" class="w-72">
+  <UCard variant="solid" class="w-80 mx-auto">
     <template #header>
-      <h1>Register</h1>
+      <h1>Register to never miss an appointment</h1>
     </template>
     <div class="flex flex-col items-center justify-center gap-4">
       <UForm :schema="schema" :state="registerForm" @submit.prevent="submit">
-        <UFormField label="First Name" name="firstName" class="pb-4">
+        <UFormField label="First Name" name="firstName" class="pb-4" :required="true">
           <UInput v-model="registerForm.firstName" class="w-full" />
         </UFormField>
-        <UFormField label="Last Name" name="lastName" class="pb-4">
+        <UFormField label="Last Name" name="lastName" class="pb-4" :required="true">
           <UInput v-model="registerForm.lastName" class="w-full" />
         </UFormField>
-        <UFormField label="Email" name="email" class="pb-4">
+        <UFormField label="Phone" name="phone" class="pb-4">
+          <UInput v-model="registerForm.phone" class="w-full" />
+        </UFormField>
+        <UFormField label="Email" name="email" class="pb-4" :required="true">
           <UInput v-model="registerForm.email" class="w-full" />
         </UFormField>
-        <PasswordInput v-model="registerForm.password" />
-        <UFormField label="Confirm Password" name="password" class="pb-4">
-          <UInput v-model="passwordToCompareWith" type="password" class="w-full" />
-          <p v-if="showPasswordCompareMessage" class="text-error pt-2 pb-0">
-            Passwords do not match
-          </p>
-        </UFormField>
-        <UButton type="submit" class="cursor-pointer">Register</UButton>
+        <PasswordInput
+          v-model:password="registerForm.password"
+          v-model:passwordComparission="registerForm.passwordComparission"
+          :required="true"
+          :showPasswordConfirmation="true"
+        />
+        <!-- <UFormField
+          label="Confirm Password"
+          name="passwordComparission"
+          class="pb-1"
+          :required="true"
+        >
+          <UInput
+            v-model="registerForm.passwordComparission"
+            type="password"
+            class="w-full"
+          />
+        </UFormField> -->
+        <p class="text-xs text-black pb-4 font-bold">
+          <span class="text-red-500">*</span> Required fields
+        </p>
+        <UButton variant="solid" type="submit" class="cursor-pointer text-black"
+          >Register</UButton
+        >
       </UForm>
-      <p>
-        Do you have an Account?
-        <NuxtLink to="/login" class="cursor-pointer text-primary">Login</NuxtLink>
-      </p>
     </div>
+    <template #footer>
+      Do you have an Account?
+      <NuxtLink to="/login" class="text-amber-300 pl-2 cursor-pointer">Login</NuxtLink>
+    </template>
   </UCard>
 </template>
 

@@ -11,17 +11,40 @@ export interface CreateUserRequest {
   password: string;
   firstName: string;
   lastName: string;
+  phone: string;
 }
 
 export interface CreateUserResponse {
-  success: boolean;
-  message: string;
-  user?: {
+  user: {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
+    phone: string;
   };
+}
+
+export interface SignInDto {
+  email: string;
+  password: string;
+}
+
+export interface SignInResponse {
+  access_token: string;
+  id: string;
+  email: string;
+}
+
+// Custom error class for better error handling
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
 }
 
 export class ApiService {
@@ -36,10 +59,34 @@ export class ApiService {
   }
 
   // User endpoints
-  static async createUser(userData: CreateUserRequest): Promise<CreateUserResponse> {
-    return await $fetch<CreateUserResponse>(`${API_BASE_URL}/user`, {
+  static async createUser(userData: CreateUserRequest) {
+    try {
+      return await $fetch<CreateUserResponse>(`${API_BASE_URL}/user`, {
+        method: 'POST',
+        body: userData,
+      });
+    } catch (error: any) {
+      if (error.status === 409) {
+        throw new ApiError(
+          error.data?.message,
+          409,
+          'CONFLICT'
+        );
+
+      }
+    }
+  }
+
+  static async signIn(data: SignInDto) {
+    try {
+      return await $fetch<SignInResponse>(`${API_BASE_URL}/auth`, {
       method: 'POST',
-      body: userData,
-    });
+        body: data,
+      });
+    } catch (error: any) {
+      if (error.status === 401) {
+        throw new ApiError(error.data?.message, 401, 'UNAUTHORIZED');
+      }
+    }
   }
 }
