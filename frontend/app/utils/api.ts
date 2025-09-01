@@ -35,6 +35,15 @@ export interface SignInResponse {
   email: string;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  createdAt?: string;
+}
+
 // Custom error class for better error handling
 export class ApiError extends Error {
   constructor(
@@ -87,6 +96,21 @@ export class ApiService {
       if (error.status === 401) {
         throw new ApiError(error.data?.message, 401, 'UNAUTHORIZED');
       }
+    }
+  }
+  static async getProfile(token: string): Promise<UserProfile> {
+    try {
+      return await $fetch<UserProfile>(`${API_BASE_URL}/user/profile`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error: any) {
+      if (error.status === 401) {
+        throw new ApiError('Unauthorized - Invalid or expired token', 401, 'UNAUTHORIZED');
+      }
+      throw new ApiError('Failed to fetch profile', error.status || 500);
     }
   }
 }

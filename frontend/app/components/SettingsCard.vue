@@ -12,8 +12,8 @@ const emits = defineEmits({
 });
 type TSchema = z.output<typeof baseSchema>;
 const user = ref<TSchema & TUser>({
-  firstName: '',
-  lastName: '',
+  first_name: '',
+  last_name: '',
   email: '',
   phone: '',
   password: '',
@@ -49,8 +49,8 @@ const showNotificationSaveBtn = () => {
 const changeData = ref(false);
 
 const baseSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
   email: z.string().email(),
   phone: z.string().optional(),
   password: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
@@ -77,12 +77,12 @@ const safeUser = () => {
         <div class="flex flex-col items-start gap-4">
           <h3 class="text-3xl font-bold text-black mb-4">User</h3>
           <div>
-            <p class="text-black text-lg font-semibold">First Name: {{ props.user.firstName }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.firstName" />
+            <p class="text-black text-lg font-semibold">First Name: {{ props.user.first_name }}</p>
+            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.first_name" />
           </div>
           <div>
-            <p class="text-black text-lg font-semibold">Last Name: {{ props.user.lastName }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.lastName" />
+            <p class="text-black text-lg font-semibold">Last Name: {{ props.user.last_name }}</p>
+            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.last_name" />
           </div>
           <div>
             <p class="text-black text-lg font-semibold">Phone: {{ props.user.phone }}</p>
