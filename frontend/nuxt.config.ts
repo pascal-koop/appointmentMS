@@ -16,6 +16,11 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:3001',
+    }
+  },
 
   // Ensure proper SSR handling
   ssr: true,

@@ -41,7 +41,6 @@ export interface UserProfile {
   first_name: string;
   last_name: string;
   phone: string;
-  createdAt?: string;
 }
 
 // Custom error class for better error handling
@@ -91,6 +90,7 @@ export class ApiService {
       return await $fetch<SignInResponse>(`${API_BASE_URL}/auth`, {
       method: 'POST',
         body: data,
+        credentials: 'include'
       });
     } catch (error: any) {
       if (error.status === 401) {
@@ -98,13 +98,12 @@ export class ApiService {
       }
     }
   }
-  static async getProfile(token: string): Promise<UserProfile> {
+  static async getProfile(): Promise<UserProfile> {
     try {
       return await $fetch<UserProfile>(`${API_BASE_URL}/user/profile`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
+
       });
     } catch (error: any) {
       if (error.status === 401) {

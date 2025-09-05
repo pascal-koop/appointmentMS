@@ -2,12 +2,18 @@
 import type { TUser } from '../types/formTypes/user/user.types';
 import Switch from './toggles/Switch.vue';
 import { z } from 'zod';
-const props = defineProps<{
-  user: Omit<TUser, 'password'>;
-}>();
+const props = withDefaults(
+  defineProps<{
+    user: Omit<TUser, 'password'>;
+    loading: boolean;
+  }>(),
+  {
+    loading: true,
+  }
+);
 
 const emits = defineEmits({
-  safeUser: (data: TUser) => data,
+  saveUser: (data: TUser) => data,
   saveNotificationSettings: (data: typeof notificationSettings.value) => data,
 });
 type TSchema = z.output<typeof baseSchema>;
@@ -58,7 +64,7 @@ const baseSchema = z.object({
 
 const safeUser = () => {
   if (baseSchema.safeParse(user.value).success) {
-    emits('safeUser', user.value);
+    emits('saveUser', user.value);
   }
   return;
 };
@@ -72,7 +78,17 @@ const safeUser = () => {
         <UButton variant="solid" class="bg-[#ff60b4] text-black mt-4">Logout</UButton>
       </div>
     </template>
-    <div class="flex flex-row flex-wrap gap-20">
+    <div v-if="props.loading" class="flex flex-col gap-4">
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[250px]" />
+    </div>
+    <div v-else class="flex flex-row flex-wrap gap-20">
       <UForm :schema="baseSchema" :state="user" @submit.prevent="safeUser">
         <div class="flex flex-col items-start gap-4">
           <h3 class="text-3xl font-bold text-black mb-4">User</h3>

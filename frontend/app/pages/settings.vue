@@ -1,45 +1,34 @@
 <script setup lang="ts">
 import type { TUser } from '../types/formTypes/user/user.types';
 import { useAuthStore } from '../../stores/auth/authStore';
+import { useUserStore } from '../../stores/user/userStore';
 const authStore = useAuthStore();
-const user = ref({
+const userStore = useUserStore();
+import type { UserProfile } from '../../app/utils/api';
+const user = ref<UserProfile>({
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
+  id: '',
 });
 
-const safeUser = (user: TUser) => {
+const saveUser = (user: TUser) => {
   console.log(user);
 };
-
+const loading = ref(true);
 onMounted(async () => {
-  try {
-    // Token laden
-    const token = await authStore.loadTokenFromLocalStorage();
-
-    if (!token) {
-      await navigateTo('/login');
-      return;
-    }
-
-    // Profil laden
-    const profile = await ApiService.getProfile(token);
-    console.log(profile);
-    if (profile) {
-      user.value = { ...profile };
-    }
-  } catch (error) {
-    console.error('Error loading profile:', error);
-    // Bei Fehler zur Login-Seite weiterleiten
-    await navigateTo('/login');
+  const profileData = await userStore.getUser();
+  if (profileData) {
+    user.value = { ...profileData };
+    loading.value = false;
   }
 });
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
-    <SettingsCard :user="user" @safeUser="safeUser" />
+    <SettingsCard :loading="loading" :user="user" @safeUser="saveUser" />
   </div>
 </template>
 

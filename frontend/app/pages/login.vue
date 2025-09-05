@@ -2,17 +2,15 @@
 import LoginForm from '~/components/forms/LoginForm.vue';
 import type { TLoginForm } from '~/types/formTypes/loginRegister.types';
 import { ApiService } from '~/utils/api';
-import { useAuthStore } from '../../stores/auth/authStore';
-const authStore = useAuthStore();
+
 const { showError, showSuccess } = useToaster();
-const submit = async (data: TLoginForm) => {
+
+const loginUser = async (data: TLoginForm) => {
   try {
-    const response = await ApiService.signIn(data);
-    if (response?.access_token) {
-      authStore.setToken(response.access_token);
-      showSuccess('You are now logged in, YAY! ');
-      await navigateTo('/settings');
-    }
+    await ApiService.signIn(data);
+
+    showSuccess('You are now logged in, YAY! ');
+    await navigateTo('/settings');
   } catch (error) {
     if (error instanceof ApiError) {
       switch (error.code) {
@@ -27,7 +25,7 @@ const submit = async (data: TLoginForm) => {
 
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
-    <LoginForm @submit="submit" />
+    <LoginForm @submit="loginUser" />
   </div>
 </template>
 

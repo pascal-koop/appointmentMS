@@ -44,6 +44,7 @@ export class UserService {
       PrismaErrorHandler.handle(error);
     }
   }
+
   async findUserById(id: string) {
     return this.prisma.users.findUnique({
       where: { id },
