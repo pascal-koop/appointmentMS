@@ -112,4 +112,14 @@ export class ApiService {
       throw new ApiError('Failed to fetch profile', error.status || 500);
     }
   }
+  static async logout(): Promise<{ok: boolean}>{
+    try{
+      return await $fetch<{ok: boolean}>(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch( error: any ){
+      throw new ApiError('Failed to logout', error.status || 500);
+    }
+  }
 }

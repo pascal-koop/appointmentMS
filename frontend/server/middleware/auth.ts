@@ -6,3 +6,5 @@ export default defineEventHandler((event)=>{
         return sendRedirect(event, '/login')
     }
 })
+
+// TODO was ist der unterrschied zwischen dieser middleware und der auth.global

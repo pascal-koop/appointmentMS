@@ -7,8 +7,6 @@ export const useUserStore = defineStore('user', ()=> {
 
     async function getUser(){
     try {
-
-
         const profile = await ApiService.getProfile();
         if (profile) {
           user.value  = { ...profile };
@@ -19,5 +17,6 @@ export const useUserStore = defineStore('user', ()=> {
         await navigateTo('/login')
       }
     }
+
     return {getUser, user}
 })

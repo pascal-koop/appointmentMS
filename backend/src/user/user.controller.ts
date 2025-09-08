@@ -37,6 +37,12 @@ export class UserController {
   }
 
   @Get('profile')
+  @ApiOperation({
+    summary: 'get user profile',
+    description:
+      'get user profile of loggedIn user, works only if you logged in first and with httpOnly cookie is set',
+    operationId: 'getProfile',
+  })
   @UseGuards(AuthGuard)
   async getMyProfile(@Request() req: RequestWithUser) {
     const userId = req.user.sub;

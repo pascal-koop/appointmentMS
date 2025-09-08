@@ -64,7 +64,7 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({
     summary: 'logout',
-    description: 'logout',
+    description: 'logout of the Application',
     operationId: 'logout',
   })
   @HttpCode(HttpStatus.OK)

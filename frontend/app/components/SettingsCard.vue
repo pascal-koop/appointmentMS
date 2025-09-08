@@ -12,10 +12,11 @@ const props = withDefaults(
   }
 );
 
-const emits = defineEmits({
-  saveUser: (data: TUser) => data,
-  saveNotificationSettings: (data: typeof notificationSettings.value) => data,
-});
+const emit = defineEmits<{
+  (e: 'saveUserData', data: TUser): void;
+  (e: 'saveNotificationSettings', data: typeof notificationSettings.value): void;
+  (e: 'logout'): void;
+}>();
 type TSchema = z.output<typeof baseSchema>;
 const user = ref<TSchema & TUser>({
   first_name: '',
@@ -32,7 +33,7 @@ const notificationSettings = ref({
 
 const saveNotificationSettings = () => {
   notificationSettingsChanged.value = false;
-  emits('saveNotificationSettings', notificationSettings.value);
+  emit('saveNotificationSettings', notificationSettings.value);
 };
 
 const notificationSettingsChanged = ref(false);
@@ -64,9 +65,13 @@ const baseSchema = z.object({
 
 const safeUser = () => {
   if (baseSchema.safeParse(user.value).success) {
-    emits('saveUser', user.value);
+    emit('saveUserData', user.value);
   }
   return;
+};
+
+const logout = () => {
+  emit('logout');
 };
 </script>
 
@@ -75,7 +80,7 @@ const safeUser = () => {
     <template #header>
       <div class="flex flex-col items-start justify-around mt-12">
         <h3 class="text-4xl font-bold mb-7">Settings</h3>
-        <UButton variant="solid" class="bg-[#ff60b4] text-black mt-4">Logout</UButton>
+        <UButton variant="solid" class="bg-[#ff60b4] text-black mt-4" @click="logout">Logout</UButton>
       </div>
     </template>
     <div v-if="props.loading" class="flex flex-col gap-4">
