@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
           await ApiService.logout();
         } catch (error) {
           console.error('Logout error:', error);
+          isAuthenticated.value = false
         } finally {
           isAuthenticated.value = false;
         }

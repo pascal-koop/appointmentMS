@@ -144,7 +144,7 @@ export class ApiService {
         try {
           await this.refreshToken();
           // Retry mit neuem Token
-          return await $fetch<T>(url, {
+          return await $fetch<T>(`${API_BASE_URL}${url}`, {
             ...options,
             credentials: 'include',
           });
