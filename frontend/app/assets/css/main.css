@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static{
+    --font-sans: 'Archivo', sans-serif;
+
+    --breakpoint-3xl: 1920px;
+
+    --color-yellow-50: #FDFD96;
+    --color-yellow-100: #FEFEBB;
+    --color-yellow-200: #FDFD96;
+    --color-yellow-300: #FFDB58;
+    --color-yellow-400: #FDFD96;
+    --color-yellow-500: #F4D73B;
+    --color-yellow-600: #F4D73B;
+    --color-yellow-700: #B3A327;
+    --color-yellow-800: #99851F;
+    --color-yellow-900: #7A6B1A;
+    --color-yellow-950: #4A3F0D;
+
+    --color-lavender-50:  #F7F5FA;
+    --color-lavender-100: #ECE7F2;
+    --color-lavender-200: #DDD4E5;
+    --color-lavender-300: #CDBFD8;
+    --color-lavender-400: #BCAFCB;  /* Basisfarbe */
+    --color-lavender-500: #A998BC;
+    --color-lavender-600: #927DA3;
+    --color-lavender-700: #7A6786;
+    --color-lavender-800: #61506B;
+    --color-lavender-900: #4B3C54;
+    --color-lavender-950: #2E2434;
+
+        --ui-primary: var(--color-yellow-600);
+        --ui-neutral: var(--color-lavender-600);
+        --ui-primary-content: var(--color-yellow-50);
+        --ui-neutral-content: var(--color-lavender-600);
+        --ui-primary-hover: var(--color-yellow-600);
+        --ui-neutral-hover: var(--color-lavender-600);
+        --ui-primary-active: var(--color-yellow-700);
+        --ui-neutral-active: var(--color-lavender-600);
+
+}
+.no-hover-effect {
+    transition: none;
+  }
+
+  .no-hover-effect:hover {
+    transform: none;
+    scale: 1;
+    background-color: var(--color-amber-300) !important; /* amber-300 */
+    /* border-color: rgb(0 0 0) !important; /* black */
+    box-shadow: none /* drop-shadow */
+  }
