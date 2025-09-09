@@ -1,11 +1,30 @@
 import { defineStore } from 'pinia';
 import { ApiService } from '~/utils/api';
+import { ref } from 'vue';
+
+export const useAuthStore = defineStore('auth', () => {
+    const isAuthenticated = ref<boolean>(false);
+
+    async function checkAuthStatus() {
+        try {
+           await ApiService.apiCall('/auth/status');
+          isAuthenticated.value = true;
+          return true;
+        } catch (error) {
+          isAuthenticated.value = false;
+          return false;
+        }
+      }
+    async function logout() {
+        try {
+          await ApiService.logout();
+        } catch (error) {
+          console.error('Logout error:', error);
+        } finally {
+          isAuthenticated.value = false;
+        }
+      }
 
 
-export const useAuthStore = defineStore('auth', ()=> {
-
-    async function logout(){
-        await ApiService.logout()
-    }
-    return {logout}
+    return { logout, checkAuthStatus, isAuthenticated }
 })

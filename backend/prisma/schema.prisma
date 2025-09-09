@@ -36,5 +36,21 @@ model Users {
   last_name     String
   password_hash String
   created_at    DateTime       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime       @updatedAt @db.Timestamp(6)
   appointments  Appointments[]
+  refresh_tokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  user_id   String   @db.Uuid
+  expires_at DateTime
+  created_at DateTime @default(now())
+  is_revoked Boolean @default(false)
+
+  user Users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([user_id])
 }

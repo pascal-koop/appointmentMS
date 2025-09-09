@@ -1,4 +1,4 @@
-// Replace axios with Nuxt's $fetch
+import { useAuthStore } from '~~/stores/auth/authStore';
 const API_BASE_URL = 'http://localhost:3001';
 
 export interface HealthResponse {
@@ -98,6 +98,7 @@ export class ApiService {
       }
     }
   }
+
   static async getProfile(): Promise<UserProfile> {
     try {
       return await $fetch<UserProfile>(`${API_BASE_URL}/user/profile`, {
@@ -112,6 +113,7 @@ export class ApiService {
       throw new ApiError('Failed to fetch profile', error.status || 500);
     }
   }
+
   static async logout(): Promise<{ok: boolean}>{
     try{
       return await $fetch<{ok: boolean}>(`${API_BASE_URL}/auth/logout`, {
@@ -120,6 +122,40 @@ export class ApiService {
       })
     } catch( error: any ){
       throw new ApiError('Failed to logout', error.status || 500);
+    }
+  }
+
+  static async refreshToken(): Promise<{ success: boolean }> {
+    return await $fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+  }
+
+  static async apiCall<T>(url: string, options: any = {}): Promise<T> {
+    try {
+      return await $fetch<T>(`${API_BASE_URL}${url}`, {
+        ...options,
+        credentials: 'include',
+      });
+    } catch (error: any) {
+      // Wenn 401 (Token abgelaufen), versuche Refresh
+      if (error.status === 401) {
+        try {
+          await this.refreshToken();
+          // Retry mit neuem Token
+          return await $fetch<T>(url, {
+            ...options,
+            credentials: 'include',
+          });
+        } catch (refreshError) {
+          // Refresh fehlgeschlagen, User ausloggen
+          const authStore = useAuthStore();
+          authStore.logout();
+          throw refreshError;
+        }
+      }
+      throw error;
     }
   }
 }

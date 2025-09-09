@@ -4,10 +4,12 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { RefreshTokenService } from './refresh-token.service';
+import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, RefreshTokenService, PrismaService],
   imports: [
     UserModule,
     JwtModule.register({
@@ -16,5 +18,6 @@ import { jwtConstants } from './constants';
       signOptions: { expiresIn: '15m' },
     }),
   ],
+  exports: [AuthService, RefreshTokenService],
 })
 export class AuthModule {}

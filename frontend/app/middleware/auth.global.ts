@@ -1,19 +1,21 @@
-// read cookie server side
+
+import { useAuthStore } from '~~/stores/auth/authStore'
+
 // call backend and ask if logged in because we cant read a httpOnly cookie with js
-export default defineNuxtRouteMiddleware(async (to, from)=> {
+export default defineNuxtRouteMiddleware(async (to, _from)=> {
     const protectedPaths = ['/settings']
+
 	if (!protectedPaths.includes(to.path)) return
-    const config = useRuntimeConfig()
-	const headers = import.meta.server ? useRequestHeaders(['cookie']) : undefined
-    const apiBase = config.public.apiBase
-	try {
-		await $fetch('/user/profile', {
-			method: 'GET',
-			credentials: 'include',
-			headers,
-            baseURL: apiBase
-		})
-	} catch (e: any) {
-		if (e?.status === 401) return navigateTo('/login')
-	}
+
+	const authStore = useAuthStore();
+ try {
+	 const isAuthenticated = await authStore.checkAuthStatus()
+
+	 if (!isAuthenticated) navigateTo('/login')
+ } catch (error) {
+	console.error('Auth check failed:', error)
+        return navigateTo('/login')
+ }
+
+
 })

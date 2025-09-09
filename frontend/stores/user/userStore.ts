@@ -8,13 +8,14 @@ export const useUserStore = defineStore('user', ()=> {
     async function getUser(){
     try {
         const profile = await ApiService.getProfile();
+
         if (profile) {
           user.value  = { ...profile };
           return user.value
         }
       } catch (error) {
         console.error('Error loading profile:', error);
-        await navigateTo('/login')
+
       }
     }
 
