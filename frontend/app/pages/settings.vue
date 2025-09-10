@@ -1,32 +1,44 @@
 <script setup lang="ts">
-import type { TUser } from '../types/formTypes/user/user.types';
 import { useAuthStore } from '../../stores/auth/authStore';
 import { useUserStore } from '../../stores/user/userStore';
-import type { UserProfile } from '../../app/utils/api';
+import type { TUser } from '~/utils/apis/user';
+import { storeToRefs } from 'pinia';
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const { showError, showSuccess } = useToaster();
 
-const user = ref<UserProfile>({
+const user = ref<TUser>({
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
   id: '',
 });
-
-const saveUser = (user: TUser) => {
-  console.log(user);
+const { user: userRef } = storeToRefs(userStore);
+const saveUser = async (data: Omit<TUser, 'id'> & { password: string }) => {
+  console.log('save');
+  try {
+    const payload = {
+      email: data.email,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      phone: data.phone,
+      password: '',
+    };
+    if (data.password) payload.password = data.password;
+    await userStore.updateUser(payload);
+    showSuccess('data successfully changed');
+    user.value = userRef.value ?? user.value;
+  } catch (error) {}
 };
 const logout = async () => {
   try {
     await authStore.logout();
     showSuccess('You successful logged out of the application');
+    navigateTo('/login');
   } catch (e: unknown) {
     showError("seems you can't logout, please try again in 5 min. or contact the support");
     throw new Error('something went wrong, in logout');
-  } finally {
-    navigateTo('/login');
   }
 };
 
@@ -50,7 +62,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
-    <SettingsCard :loading="loading" :user="user" @safeUser="saveUser" @logout="logout" />
+    <SettingsCard :loading="loading" :user="user" @save-user-data="saveUser" @logout="logout" />
   </div>
 </template>
 

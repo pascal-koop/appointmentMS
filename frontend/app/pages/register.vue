@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import RegisterForm from '~/components/forms/RegisterForm.vue';
 import type { TRegisterForm } from '~/types/formTypes/loginRegister.types';
-import { ApiService, ApiError } from '~/utils/api';
+import { useAuthStore } from '~~/stores/auth/authStore';
 
 const { showError, showSuccess } = useToaster();
-
+const authStore = useAuthStore();
 const submit = async (data: TRegisterForm) => {
   delete (data as any).passwordComparission;
 
@@ -17,21 +17,13 @@ const submit = async (data: TRegisterForm) => {
   };
 
   try {
-    await ApiService.createUser(registrationData);
-
+    await authStore.registerUser(registrationData);
     showSuccess('You are now registered, YAY! ');
-  } catch (error) {
-    console.error(error);
-    if (error instanceof ApiError) {
-      switch (error.code) {
-        case 'CONFLICT':
-          showError(
-            'This email is already registered. Please use a different email or try logging in.'
-          );
-          break;
-        default:
-          showError('An unexpected error occurred. Please try again.');
-      }
+  } catch (e: any) {
+    if (e?.status === 409) {
+      showError('This email is already registered. Please use a different email or try logging in.');
+    } else {
+      showError('An unexpected error occurred. Please try again.');
     }
   }
 };

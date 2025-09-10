@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import LoginForm from '~/components/forms/LoginForm.vue';
-import type { TLoginForm } from '~/types/formTypes/loginRegister.types';
-import { ApiService } from '~/utils/api';
 import { useAuthStore } from '~~/stores/auth/authStore';
-const { showError, showSuccess } = useToaster();
+import type { TSignInDto } from '~/utils/apis/auth';
 
+const { showError, showSuccess } = useToaster();
 const authStore = useAuthStore();
-const loginUser = async (data: TLoginForm) => {
+
+const loginUser = async (data: TSignInDto) => {
   try {
-    await ApiService.signIn(data);
-    authStore.isAuthenticated = true;
+    await authStore.login(data);
     showSuccess('You are now logged in, YAY! ');
     await navigateTo('/settings');
   } catch (error) {

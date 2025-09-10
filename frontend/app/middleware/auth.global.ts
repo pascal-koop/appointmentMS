@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (to, _from)=> {
  try {
 	 const isAuthenticated = await authStore.checkAuthStatus()
 
-	 if (!isAuthenticated) navigateTo('/login')
+	 if (!isAuthenticated) return navigateTo('/login')
  } catch (error) {
 	console.error('Auth check failed:', error)
         return navigateTo('/login')
