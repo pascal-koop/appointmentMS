@@ -1,4 +1,4 @@
-export class CreateUserDto {
+export class TCreateUserDto {
   email: string;
   password: string;
   firstName: string;
@@ -14,10 +14,10 @@ export class GetUserDto {
   phone: string;
 }
 
-export class UpdateUserDto {
+export class TUpdateUserDto {
   email?: string;
   password?: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   phone?: string;
 }

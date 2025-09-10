@@ -41,7 +41,7 @@ const submit = (event: FormSubmitEvent<TSchema>) => {
 <template>
   <UCard variant="solid" class="w-80 mx-auto">
     <template #header>
-      <h1>Register to never miss an appointment</h1>
+      <h1>Register and never miss an appointment</h1>
     </template>
     <div class="flex flex-col items-center justify-center gap-4">
       <UForm :schema="schema" :state="registerForm" @submit.prevent="submit">
@@ -75,12 +75,8 @@ const submit = (event: FormSubmitEvent<TSchema>) => {
             class="w-full"
           />
         </UFormField> -->
-        <p class="text-xs text-black pb-4 font-bold">
-          <span class="text-red-500">*</span> Required fields
-        </p>
-        <UButton variant="solid" type="submit" class="cursor-pointer text-black"
-          >Register</UButton
-        >
+        <p class="text-xs text-black pb-4 font-bold"><span class="text-red-500">*</span> Required fields</p>
+        <UButton variant="solid" type="submit" class="cursor-pointer text-black">Register</UButton>
       </UForm>
     </div>
     <template #footer>

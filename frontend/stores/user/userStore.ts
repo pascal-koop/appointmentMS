@@ -1,13 +1,13 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { UserProfile } from '../../app/utils/api';
-import { ApiService } from '../../app/utils/api';  // ← ApiService Import
+import { userApi, type TUser, type TUpdateUserDto } from '~/utils/apis/user';
+
 export const useUserStore = defineStore('user', ()=> {
-    const user = ref<UserProfile| null>(null);
+    const user = ref<TUser| null>(null);
 
     async function getUser(){
     try {
-        const profile = await ApiService.getProfile();
+        const profile = await userApi.get();
 
         if (profile) {
           user.value  = { ...profile };
@@ -19,5 +19,16 @@ export const useUserStore = defineStore('user', ()=> {
       }
     }
 
-    return {getUser, user}
+    async function updateUser(data: TUpdateUserDto) {
+      try {
+        const profile = await userApi.update(data);
+        if (profile && profile.id) {
+          user.value = {...profile, id: profile.id}
+        }
+      } catch (error) {
+
+      }
+    }
+
+    return {getUser, updateUser, user}
 })

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TUser } from '../types/formTypes/user/user.types';
 import Switch from './toggles/Switch.vue';
+import type { TUser } from '~/utils/apis/user';
 import { z } from 'zod';
 const props = withDefaults(
   defineProps<{
@@ -11,21 +11,35 @@ const props = withDefaults(
     loading: true,
   }
 );
-
+type TUserExtended = Omit<TUser, 'id'> & { password: string };
 const emit = defineEmits<{
-  (e: 'saveUserData', data: TUser): void;
+  (e: 'saveUserData', data: TUserExtended): void;
   (e: 'saveNotificationSettings', data: typeof notificationSettings.value): void;
   (e: 'logout'): void;
 }>();
+
 type TSchema = z.output<typeof baseSchema>;
-const user = ref<TSchema & TUser>({
+const user = ref<TSchema & TUserExtended>({
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
   password: '',
 });
-
+watch(
+  () => props.user,
+  (newUser) => {
+    if (!newUser) return;
+    user.value = {
+      first_name: newUser.first_name ?? '',
+      last_name: newUser.last_name ?? '',
+      email: newUser.email ?? '',
+      phone: newUser.phone ?? '',
+      password: '',
+    };
+  },
+  { immediate: true }
+);
 const notificationSettings = ref({
   email: true,
   sms: false,
@@ -56,16 +70,18 @@ const showNotificationSaveBtn = () => {
 const changeData = ref(false);
 
 const baseSchema = z.object({
-  first_name: z.string().min(1),
-  last_name: z.string().min(1),
-  email: z.string().email(),
+  first_name: z.string().min(1).optional(),
+  last_name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
   phone: z.string().optional(),
   password: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
 });
 
-const safeUser = () => {
+const saveUser = () => {
+  console.log('save1');
   if (baseSchema.safeParse(user.value).success) {
     emit('saveUserData', user.value);
+    changeData.value = false;
   }
   return;
 };
@@ -94,7 +110,7 @@ const logout = () => {
       <USkeleton class="h-4 w-[250px]" />
     </div>
     <div v-else class="flex flex-row flex-wrap gap-20">
-      <UForm :schema="baseSchema" :state="user" @submit.prevent="safeUser">
+      <UForm :schema="baseSchema" :state="user" @submit.once="saveUser">
         <div class="flex flex-col items-start gap-4">
           <h3 class="text-3xl font-bold text-black mb-4">User</h3>
           <div>
@@ -130,7 +146,12 @@ const logout = () => {
             >
               {{ changeData ? 'Abort' : 'Change Data' }}
             </UButton>
-            <UButton type="submit" v-if="changeData" variant="solid" class="bg-[#ff60b4] text-black mt-4 cursor-pointer"
+            <UButton
+              @click="saveUser"
+              type="submit"
+              v-if="changeData"
+              variant="solid"
+              class="bg-[#ff60b4] text-black mt-4 cursor-pointer"
               >Save</UButton
             >
           </div>

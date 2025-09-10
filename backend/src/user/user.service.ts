@@ -1,5 +1,5 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { TCreateUserDto, TUpdateUserDto } from './user.dto';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcrypt';
 import { PrismaErrorHandler } from '../common/utils/prisma-error-handler.util';
@@ -16,7 +16,7 @@ export class UserService {
     });
   }
 
-  async create(data: CreateUserDto): Promise<Users> {
+  async create(data: TCreateUserDto): Promise<Users> {
     try {
       // First, check if a user with this email already exists
       const existingUser = await this.findByEmail(data.email);
@@ -41,6 +41,42 @@ export class UserService {
         throw error;
       }
 
+      PrismaErrorHandler.handle(error);
+    }
+  }
+
+  async updateUser(data: TUpdateUserDto, id: string) {
+    try {
+      const updateData: {
+        email?: string;
+        first_name?: string;
+        last_name?: string;
+        phone?: string;
+        password_hash?: string;
+      } = {};
+
+      if (data.email) updateData.email = data.email;
+      if (data.first_name) updateData.first_name = data.first_name;
+      if (data.last_name) updateData.last_name = data.last_name;
+      if (data.phone) updateData.phone = data.phone;
+
+      if (data.password && data.password.length > 0) {
+        updateData.password_hash = await bcrypt.hash(data.password, 10);
+      }
+
+      return this.prisma.users.update({
+        where: { id },
+        data: updateData,
+        select: {
+          id: true,
+          email: true,
+          phone: true,
+          first_name: true,
+          last_name: true,
+          created_at: true,
+        },
+      });
+    } catch (error: unknown) {
       PrismaErrorHandler.handle(error);
     }
   }

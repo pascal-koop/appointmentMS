@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiOperation } from '@nestjs/swagger';
-import { CreateUserDto } from './user.dto';
+import { TCreateUserDto, TUpdateUserDto } from './user.dto';
 import { AuthGuard } from '../auth/auth.guard';
 interface RequestWithUser extends Request {
   user: {
@@ -32,8 +32,22 @@ export class UserController {
     description: 'Create user',
     operationId: 'createUser',
   })
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: TCreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('update')
+  @ApiOperation({
+    summary: 'update user',
+    operationId: 'updateUser',
+  })
+  @UseGuards(AuthGuard)
+  update(
+    @Body() updateUserDto: TUpdateUserDto,
+    @Request() req: RequestWithUser,
+  ) {
+    const id = req.user.sub;
+    return this.userService.updateUser(updateUserDto, id);
   }
 
   @Get('profile')
