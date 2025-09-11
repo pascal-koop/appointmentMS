@@ -12,7 +12,13 @@ const loginUser = async (data: TSignInDto) => {
     showSuccess('You are now logged in, YAY! ');
     await navigateTo('/settings');
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (data.email === '' && data.password === '') {
+      showError('wtf?! you should fill the form with your email and password');
+    } else if (data.email === '') {
+      showError('Huh? your email is missing');
+    } else if (data.password === '') {
+      showError('Huh? your password is missing');
+    } else if (error instanceof ApiError) {
       switch (error.code) {
         case 'UNAUTHORIZED':
           showError('Invalid email or password');
@@ -24,7 +30,7 @@ const loginUser = async (data: TSignInDto) => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen">
+  <div class="flex flex-col items-center justify-center h-screen my-auto">
     <LoginForm @submit="loginUser" />
   </div>
 </template>

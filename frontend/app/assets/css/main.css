@@ -51,3 +51,10 @@
     /* border-color: rgb(0 0 0) !important; /* black */
     box-shadow: none /* drop-shadow */
   }
+  @supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  html { -webkit-text-size-adjust: 100%; }

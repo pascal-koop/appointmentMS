@@ -25,7 +25,7 @@ export default defineAppConfig({
     },
     input:{
       slots: {
-        base: 'border-3 border-black rounded-none'
+        base: 'border-3 border-black rounded-none text-[16px]'
       }
     },
     formField:{
@@ -57,6 +57,15 @@ export default defineAppConfig({
             close: 'bg-red-400 text-white'
           }
         }
+      }
+    },
+    modal: {
+      slots: {
+        content: 'border-3 border-black rounded-none drop-shadow-[6px_6px_0px_#000000] outline-none',
+
+      },
+      variants:{
+
       }
     }
   }

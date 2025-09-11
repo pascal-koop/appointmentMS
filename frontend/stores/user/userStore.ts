@@ -27,9 +27,17 @@ export const useUserStore = defineStore('user', ()=> {
           user.value = {...profile, id: profile.id}
         }
       } catch (error) {
-
+        console.log(error)
       }
     }
 
-    return {getUser, updateUser, user}
+    async function deleteUser() {
+      try {
+        await userApi.delete()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    return {getUser, updateUser, deleteUser, user}
 })

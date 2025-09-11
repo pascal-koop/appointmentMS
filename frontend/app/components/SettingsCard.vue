@@ -16,6 +16,7 @@ const emit = defineEmits<{
   (e: 'saveUserData', data: TUserExtended): void;
   (e: 'saveNotificationSettings', data: typeof notificationSettings.value): void;
   (e: 'logout'): void;
+  (e: 'deleteUser'): void;
 }>();
 
 type TSchema = z.output<typeof baseSchema>;
@@ -78,7 +79,6 @@ const baseSchema = z.object({
 });
 
 const saveUser = () => {
-  console.log('save1');
   if (baseSchema.safeParse(user.value).success) {
     emit('saveUserData', user.value);
     changeData.value = false;
@@ -89,6 +89,13 @@ const saveUser = () => {
 const logout = () => {
   emit('logout');
 };
+const checkbox = ref(false);
+const deleteButtonDisable = computed(() => {
+  return checkbox.value ? false : true;
+});
+const deleteUser = () => {
+  emit('deleteUser');
+};
 </script>
 
 <template>
@@ -96,7 +103,30 @@ const logout = () => {
     <template #header>
       <div class="flex flex-col items-start justify-around mt-12">
         <h3 class="text-4xl font-bold mb-7">Settings</h3>
-        <UButton variant="solid" class="bg-[#ff60b4] text-black mt-4" @click="logout">Logout</UButton>
+        <UButton label="Logout" class="bg-[#ff60b4] text-black mt-4" @click="logout" />
+        <UModal title="Delete Your Account" class="rounded-none">
+          <UButton label="Delete Account" variant="solid" class="bg-[#a388ee] text-black mt-4" />
+          <template #body>
+            <div>
+              <p class="font-bold mb-4">Do you want to delete your Account?</p>
+              <p class="mb-6">
+                All your data is deleted, if you want to use the Scheduler in the future you have to create a new
+                account. <br />
+                <span class="font-bold">Till then have a great life.</span>
+              </p>
+              <div class="flex gap-8">
+                <UButton
+                  :disabled="deleteButtonDisable"
+                  label="Delete"
+                  variant="solid"
+                  class="bg-[#ff6b6b] text-black font-bold"
+                  @click="deleteUser"
+                />
+                <UCheckbox v-model="checkbox" required variant="card" label="confirm your action" class="font-bold" />
+              </div>
+            </div>
+          </template>
+        </UModal>
       </div>
     </template>
     <div v-if="props.loading" class="flex flex-col gap-4">

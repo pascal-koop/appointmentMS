@@ -45,6 +45,17 @@ export class UserService {
     }
   }
 
+  async deleteUser(id: string) {
+    try {
+      await this.prisma.users.delete({
+        where: { id },
+      });
+      return { success: true };
+    } catch (error: unknown) {
+      PrismaErrorHandler.handle(error);
+    }
+  }
+
   async updateUser(data: TUpdateUserDto, id: string) {
     try {
       const updateData: {
