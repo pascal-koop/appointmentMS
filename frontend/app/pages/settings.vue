@@ -3,6 +3,7 @@ import { useAuthStore } from '../../stores/auth/authStore';
 import { useUserStore } from '../../stores/user/userStore';
 import type { TUser } from '~/utils/apis/user';
 import { storeToRefs } from 'pinia';
+import { tr } from '#ui/locale';
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const { showError, showSuccess } = useToaster();
@@ -42,6 +43,14 @@ const logout = async () => {
   }
 };
 
+const deleteUser = async () => {
+  try {
+    await userStore.deleteUser();
+    showSuccess('you deleted your account. See you soon when you need me again');
+    navigateTo('/login');
+  } catch (error) {}
+};
+
 const loading = ref(true);
 onMounted(async () => {
   const profileData = await userStore.getUser();
@@ -61,8 +70,14 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="flex flex-col items-center justify-center h-screen">
-    <SettingsCard :loading="loading" :user="user" @save-user-data="saveUser" @logout="logout" />
+  <div class="flex flex-col items-center justify-center h-screen mx-4 sm:mx-10">
+    <SettingsCard
+      :loading="loading"
+      :user="user"
+      @save-user-data="saveUser"
+      @logout="logout"
+      @delete-user="deleteUser"
+    />
   </div>
 </template>
 

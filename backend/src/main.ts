@@ -7,7 +7,11 @@ async function bootstrap() {
   app.use(cookieParser());
   // Enable CORS for frontend development
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://192.168.178.26:3000',
+    ],
     credentials: true,
   });
 
@@ -19,7 +23,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
   const port = process.env.PORT || 3001;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`🚀 Backend server running on http://localhost:${port}`);
 }
 bootstrap();

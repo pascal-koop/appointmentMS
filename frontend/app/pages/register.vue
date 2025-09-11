@@ -19,6 +19,7 @@ const submit = async (data: TRegisterForm) => {
   try {
     await authStore.registerUser(registrationData);
     showSuccess('You are now registered, YAY! ');
+    navigateTo('/login');
   } catch (e: any) {
     if (e?.status === 409) {
       showError('This email is already registered. Please use a different email or try logging in.');

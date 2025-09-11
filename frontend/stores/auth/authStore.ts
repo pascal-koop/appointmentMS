@@ -38,8 +38,10 @@ export const useAuthStore = defineStore('auth', () => {
       try{
         await authApi.login(data);
         isAuthenticated.value = true;
+        return true
       } catch(e: unknown){
-        console.log('login failed');
+        isAuthenticated.value = false
+        throw e
       }
     }
 

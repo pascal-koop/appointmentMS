@@ -6,11 +6,13 @@ import {
   UseGuards,
   Request,
   NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { TCreateUserDto, TUpdateUserDto } from './user.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { Response } from 'express';
 interface RequestWithUser extends Request {
   user: {
     sub: string;
@@ -59,12 +61,28 @@ export class UserController {
   })
   @UseGuards(AuthGuard)
   async getMyProfile(@Request() req: RequestWithUser) {
-    const userId = req.user.sub;
-    const user = await this.userService.findUserById(userId);
+    const id = req.user.sub;
+    const user = await this.userService.findUserById(id);
     console.log(user);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  @Post('delete')
+  @ApiOperation({
+    summary: 'delete user',
+    operationId: 'deleteUser',
+  })
+  @UseGuards(AuthGuard)
+  async deleteUser(
+    @Request() req: RequestWithUser,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+    const id = req.user.sub;
+    await this.userService.deleteUser(id);
   }
 }
