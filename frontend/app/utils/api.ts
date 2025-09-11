@@ -1,4 +1,5 @@
 import { useAuthStore } from '~~/stores/auth/authStore';
+import { useRequestHeaders } from '#app'
 const API_BASE_URL = 'http://localhost:3001';
 
 export interface HealthResponse {
