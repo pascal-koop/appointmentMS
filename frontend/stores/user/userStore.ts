@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', ()=> {
 
     async function getUser(){
     try {
+
         const profile = await userApi.get();
 
         if (profile) {

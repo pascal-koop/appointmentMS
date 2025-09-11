@@ -20,7 +20,9 @@ export default defineNuxtConfig({
       },
     },
   },
-
+  routeRules: {
+    '/': {redirect: '/login'}
+  },
   runtimeConfig: {
     public: {
       apiBase: 'http://localhost:3001',

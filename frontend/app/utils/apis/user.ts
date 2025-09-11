@@ -1,5 +1,5 @@
 
-import { ApiService } from '~/utils/api';
+
 export type TUser =  {
     id: string;
     email: string;
@@ -17,9 +17,11 @@ export type TUser =  {
   }
 export const userApi = {
     get():Promise<TUser> {
-        return ApiService.apiCall('/user/profile', {method: 'GET'})
+        const {$apiCall} = useNuxtApp();
+        return $apiCall('/user/profile', {method: 'GET'})
     },
     update(data: TUpdateUserDto): Promise<TUser>{
-        return ApiService.apiCall('/user/update', {method: 'POST', body: data})
+        const {$apiCall} = useNuxtApp();
+        return $apiCall('/user/update', {method: 'POST', body: data})
     }
 }

@@ -30,12 +30,16 @@ export type TCreateUserDto = {
   }
 export const authApi = {
     login(data: TSignInDto): Promise<TSignInResponse> {
-        return ApiService.apiCall('/auth', {method: 'POST', body: data});
+      const {$apiCall} = useNuxtApp();
+      return $apiCall('/auth', {method: 'POST', body: data})
+       /*  return ApiService.apiCall('/auth', {method: 'POST', body: data}); */
     },
     logout(): Promise<{ok:boolean}>{
-        return ApiService.apiCall('/auth/logout', {method: 'POST'});
+      const {$apiCall} = useNuxtApp();
+        return $apiCall('/auth/logout', {method: 'POST'});
     },
     createUser(data: TCreateUserDto): Promise<TCreateUserResponse> {
-        return ApiService.apiCall('/user', {method: 'POST', body: data});
+      const {$apiCall} = useNuxtApp();
+        return $apiCall('/user', {method: 'POST', body: data});
     }
 }

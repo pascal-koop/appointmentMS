@@ -27,39 +27,5 @@ export class ApiService {
     return await $fetch<string>(`${API_BASE_URL}/`);
   }
 
-  static async refreshToken(): Promise<{ success: boolean }> {
-    return await $fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-  }
 
-  static async apiCall<T>(url: string, options: any = {}): Promise<T> {
-    const headers = import.meta.server ? useRequestHeaders(['cookie']) : undefined
-    try {
-    return await $fetch<T>(`${API_BASE_URL}${url}`, {
-        ...options,
-        headers,
-        credentials: 'include',
-    });
-    } catch (error: any) {
-    // If 401 (Token expired), try refresh
-    if (error.status === 401) {
-        try {
-        await this.refreshToken();
-        // Retry with new Token
-        return await $fetch<T>(`${API_BASE_URL}${url}`, {
-            ...options,
-            credentials: 'include',
-        });
-        } catch (refreshError) {
-        // Refresh failed, log user out
-        const authStore = useAuthStore();
-        authStore.logout();
-        throw refreshError;
-        }
-    }
-    throw error;
-    }
-}
 }
