@@ -1,18 +1,30 @@
 export default defineAppConfig({
   ui: {
-
-    button: {
+    popover: {
       slots: {
-        base: 'font-bold border-3 rounded-none border-black bg-amber-300 drop-shadow-[4px_6px_0px_#000000] no-hover-effect cursor-pointer',
-        variant: {
-          solid: 'text-black'
-        }
+        content: 'ring-0! inset-shadow-none! focus:ring-none!'
       }
+    },
+    checkbox: {
+      slots: {
+        root: '',
+        container: 'flex items-center',
+        base: 'data-[state="unchecked"]:bg-amber-50! border-2! ring-0! drop-shadow-[2px_3px_0px_#000000]! ',
+        indicator: 'flex items-center justify-center size-full text-inverted',
+        icon: 'shrink-0 size-full',
+      }
+    },
+    switch: {
+      slots: {
+        base: ['rounded-xl! bg-amber-100! h-[1.67rem]! data-[state="checked"]:bg-green-300!']
+      },
+
     },
     card: {
       slots:{
         root: 'rounded-none border-3 border-black drop-shadow-[4px_6px_0px_#000000]',
         header: 'text-black font-bold text-xl',
+        body: 'rounded-none',
         footer: 'text-black font-bold text-sm text-center'
       },
       variants:{
@@ -61,12 +73,9 @@ export default defineAppConfig({
     },
     modal: {
       slots: {
-        content: 'border-3 border-black rounded-none drop-shadow-[6px_6px_0px_#000000] outline-none',
+        content: 'border-3 ring-0! inset-shadow-none! divide-black  bg-[#e3dff2] focus:ring-0! border-black rounded-none! drop-shadow-[4px_6px_0px_#000000] outline-none',
 
       },
-      variants:{
-
-      }
     }
   }
 })

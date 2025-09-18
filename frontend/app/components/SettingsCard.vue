@@ -14,7 +14,10 @@ const props = withDefaults(
 type TUserExtended = Omit<TUser, 'id'> & { password: string };
 const emit = defineEmits<{
   (e: 'saveUserData', data: TUserExtended): void;
-  (e: 'saveNotificationSettings', data: typeof notificationSettings.value): void;
+  (
+    e: 'saveNotificationSettings',
+    data: typeof notificationSettings.value
+  ): void;
   (e: 'logout'): void;
   (e: 'deleteUser'): void;
 }>();
@@ -75,7 +78,11 @@ const baseSchema = z.object({
   last_name: z.string().min(1).optional(),
   email: z.string().email().optional(),
   phone: z.string().optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .optional()
+    .or(z.literal('')),
 });
 
 const saveUser = () => {
@@ -99,30 +106,50 @@ const deleteUser = () => {
 </script>
 
 <template>
-  <UCard variant="solid" class="mx-auto bg-[#ffd700] flex flex-row flex-wrap gap-20 overflow-y-auto">
+  <UCard
+    variant="solid"
+    class="mx-auto bg-[#ffd700] flex flex-row flex-wrap gap-20 overflow-y-auto"
+  >
     <template #header>
       <div class="flex flex-col items-start justify-around mt-12">
         <h3 class="text-4xl font-bold mb-7">Settings</h3>
-        <UButton label="Logout" class="bg-[#ff60b4] text-black mt-4" @click="logout" />
-        <UModal title="Delete Your Account" class="rounded-none">
-          <UButton label="Delete Account" variant="solid" class="bg-[#a388ee] text-black mt-4" />
+        <UButton
+          label="Logout"
+          class="bg-[#ff60b4]! text-black mt-4"
+          @click="logout"
+        />
+        <UModal
+          :dismissible="false"
+          title="Delete Your Account"
+          class="rounded-none"
+        >
+          <UButton
+            label="Delete Account"
+            class="bg-[#a388ee]! text-black mt-4"
+          />
           <template #body>
             <div>
               <p class="font-bold mb-4">Do you want to delete your Account?</p>
               <p class="mb-6">
-                All your data is deleted, if you want to use the Scheduler in the future you have to create a new
-                account. <br />
+                All your data is deleted, if you want to use the Scheduler in
+                the future you have to create a new account. <br />
                 <span class="font-bold">Till then have a great life.</span>
               </p>
               <div class="flex gap-8">
                 <UButton
                   :disabled="deleteButtonDisable"
                   label="Delete"
-                  variant="solid"
-                  class="bg-[#ff6b6b] text-black font-bold"
+                  :class="{ 'cursor-auto!': deleteButtonDisable }"
+                  class="bg-[#ff6b6b]! text-black font-bold"
                   @click="deleteUser"
                 />
-                <UCheckbox v-model="checkbox" required variant="card" label="confirm your action" class="font-bold" />
+                <UCheckbox
+                  v-model="checkbox"
+                  required
+                  variant="card"
+                  label="confirm your action"
+                  class="font-bold"
+                />
               </div>
             </div>
           </template>
@@ -142,22 +169,50 @@ const deleteUser = () => {
     <div v-else class="flex flex-row flex-wrap gap-20">
       <UForm :schema="baseSchema" :state="user" @submit.once="saveUser">
         <div class="flex flex-col items-start gap-4">
-          <h3 class="text-3xl font-bold text-black mb-4">User</h3>
+          <h3 class="text-3xl font-bold text-black">User</h3>
           <div>
-            <p class="text-black text-lg font-semibold">First Name: {{ props.user.first_name }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.first_name" />
+            <p class="text-black text-lg font-semibold">
+              First Name: {{ props.user.first_name }}
+            </p>
+            <UInput
+              class="mb-2"
+              v-if="changeData"
+              type="text"
+              v-model="user.first_name"
+            />
           </div>
           <div>
-            <p class="text-black text-lg font-semibold">Last Name: {{ props.user.last_name }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.last_name" />
+            <p class="text-black text-lg font-semibold">
+              Last Name: {{ props.user.last_name }}
+            </p>
+            <UInput
+              class="mb-2"
+              v-if="changeData"
+              type="text"
+              v-model="user.last_name"
+            />
           </div>
           <div>
-            <p class="text-black text-lg font-semibold">Phone: {{ props.user.phone }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.phone" />
+            <p class="text-black text-lg font-semibold">
+              Phone: {{ props.user.phone }}
+            </p>
+            <UInput
+              class="mb-2"
+              v-if="changeData"
+              type="text"
+              v-model="user.phone"
+            />
           </div>
           <div>
-            <p class="text-black text-lg font-semibold">Email: {{ props.user.email }}</p>
-            <UInput class="mb-2" v-if="changeData" type="text" v-model="user.email" />
+            <p class="text-black text-lg font-semibold">
+              Email: {{ props.user.email }}
+            </p>
+            <UInput
+              class="mb-2"
+              v-if="changeData"
+              type="text"
+              v-model="user.email"
+            />
           </div>
           <div>
             <p class="text-black text-lg font-semibold">Password: *********</p>
@@ -171,7 +226,7 @@ const deleteUser = () => {
           <div class="flex gap-4">
             <UButton
               variant="solid"
-              class="bg-[#ff60b4] text-black mt-4 cursor-pointer"
+              class="bg-[#ff60b4]! text-black mt-4 cursor-pointer"
               @click="changeData = !changeData"
             >
               {{ changeData ? 'Abort' : 'Change Data' }}
@@ -181,23 +236,36 @@ const deleteUser = () => {
               type="submit"
               v-if="changeData"
               variant="solid"
-              class="bg-[#ff60b4] text-black mt-4 cursor-pointer"
+              class="bg-[#ff60b4]! text-black mt-4 cursor-pointer"
               >Save</UButton
             >
           </div>
         </div>
       </UForm>
       <div class="flex flex-col items-start gap-8">
-        <UForm :state="notificationSettings" @submit.prevent="saveNotificationSettings">
+        <UForm
+          :state="notificationSettings"
+          @submit.prevent="saveNotificationSettings"
+        >
           <h3 class="text-3xl font-bold text-black mb-4">Notifications</h3>
-          <Switch v-model="notificationSettings.email" label="Email" class="mb-5" @click="showNotificationSaveBtn" />
-          <Switch v-model="notificationSettings.sms" label="SMS" class="mb-5" @click="showNotificationSaveBtn" />
+          <Switch
+            v-model="notificationSettings.email"
+            label="Email"
+            class="mb-5"
+            @click="showNotificationSaveBtn"
+          />
+          <Switch
+            v-model="notificationSettings.sms"
+            label="SMS"
+            class="mb-5"
+            @click="showNotificationSaveBtn"
+          />
           <UButton
             type="submit"
             v-if="notificationSettingsChanged"
             variant="solid"
             id="notification-save-btn"
-            class="bg-[#ff60b4] text-black mt-4 cursor-pointer"
+            class="bg-[#ff60b4]! text-black mt-4 cursor-pointer"
             >Save</UButton
           >
         </UForm>
@@ -206,4 +274,4 @@ const deleteUser = () => {
   </UCard>
 </template>
 
-<style scoped></style>
+<style></style>

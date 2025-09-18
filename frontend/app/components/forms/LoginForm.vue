@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui';
-import type { TLoginForm } from '../../types/formTypes/loginRegister.types';
+import type { TSignInDto } from '~/utils/apis/auth';
 import PasswordInput from '@/components/PasswordInput.vue';
 const emits = defineEmits({
-  submit: (data: TLoginForm) => data,
+  submit: (data: TSignInDto) => data,
 });
 
-const form = ref<TLoginForm>({
+const form = ref<TSignInDto>({
   email: '',
   password: '',
 });
 
-const submit = (event: FormSubmitEvent<TLoginForm>) => {
+const submit = (event: FormSubmitEvent<TSignInDto>) => {
   emits('submit', event.data);
 };
 </script>
@@ -24,7 +24,12 @@ const submit = (event: FormSubmitEvent<TLoginForm>) => {
     <div class="flex flex-col items-center justify-center gap-4">
       <UForm :state="form" @submit.prevent="submit">
         <UFormField label="Email" name="email" class="pb-4">
-          <UInput autocomplete="off" v-model="form.email" type="email" class="w-full" />
+          <UInput
+            autocomplete="off"
+            v-model="form.email"
+            type="email"
+            class="w-full"
+          />
         </UFormField>
         <PasswordInput autocomplete="off" v-model:password="form.password" />
         <UButton type="submit" class="cursor-pointer">Login</UButton>
@@ -32,7 +37,9 @@ const submit = (event: FormSubmitEvent<TLoginForm>) => {
     </div>
     <template #footer>
       No account?
-      <NuxtLink to="/register" class="cursor-pointer text-amber-300 pl-2"> Go to Registration </NuxtLink>
+      <NuxtLink to="/register" class="cursor-pointer text-amber-300 pl-2">
+        Go to Registration
+      </NuxtLink>
     </template>
   </UCard>
 </template>

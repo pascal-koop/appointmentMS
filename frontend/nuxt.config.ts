@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   },
 
   // Ensure proper SSR handling
-  ssr: true,
+  ssr: false,
   app: {
     head: {
       meta: [

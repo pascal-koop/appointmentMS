@@ -1,4 +1,3 @@
-import { ApiService } from '~/utils/api';
 
 export type TSignInDto = {
     email: string;
